@@ -129,18 +129,14 @@ export default function ProductPage() {
               <TableCell>{product.category.name}</TableCell>
               <TableCell>{product.price}</TableCell>
               <TableCell>{product.quantInStock}</TableCell>
-              <div className="flex justify-center">
-                <TableCell className="flex justify-center">
-                  <Button>
-                    <SquarePen />
-                  </Button>
-                </TableCell>
-                <TableCell className="flex justify-center">
-                  <Button variant="destructive">
-                    <Delete />
-                  </Button>
-                </TableCell>
-              </div>
+              <TableCell className="flex justify-center items-center gap-2">
+                <Button>
+                  <SquarePen />
+                </Button>
+                <Button variant="destructive">
+                  <Delete />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

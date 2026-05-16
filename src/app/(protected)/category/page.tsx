@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Category } from "@/types/Category";
-import { User } from "@/types/User";
 import { Delete, SquarePen } from "lucide-react";
 
 export default function CategoryPage() {
@@ -40,18 +39,15 @@ export default function CategoryPage() {
             <TableRow key={category.id}>
               <TableCell className="font-medium">{category.name}</TableCell>
               <TableCell>{category.quantityProducts} produtos</TableCell>
-              <div className="flex justify-center">
-                <TableCell className="flex justify-center">
-                  <Button>
-                    <SquarePen />
-                  </Button>
-                </TableCell>
-                <TableCell className="flex justify-center">
-                  <Button variant="destructive">
-                    <Delete />
-                  </Button>
-                </TableCell>
-              </div>
+              <TableCell className="flex justify-center items-center gap-2">
+                <Button>
+                  <SquarePen />
+                </Button>
+
+                <Button variant="destructive">
+                  <Delete />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

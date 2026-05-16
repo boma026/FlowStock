@@ -73,7 +73,7 @@ export function AppSidebar() {
                   </a>
                 </SidebarMenuButton>
                 <SidebarMenuButton asChild>
-                  <a href="/dashboard">
+                  <a href="/moves">
                     <Container />
                     <span>Entrada/Saída</span>
                   </a>

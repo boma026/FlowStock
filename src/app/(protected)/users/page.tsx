@@ -39,18 +39,16 @@ export default function CategoryPage() {
             <TableRow key={user.id}>
               <TableCell className="font-medium">{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>
-              <div className="flex justify-center">
-                <TableCell className="flex justify-center">
-                  <Button>
-                    <SquarePen />
-                  </Button>
-                </TableCell>
-                <TableCell className="flex justify-center">
-                  <Button variant="destructive">
-                    <Delete />
-                  </Button>
-                </TableCell>
-              </div>
+
+              <TableCell className="flex justify-center items-center gap-2">
+                <Button>
+                  <SquarePen />
+                </Button>
+
+                <Button variant="destructive">
+                  <Delete />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
