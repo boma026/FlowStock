@@ -100,7 +100,7 @@ export default function Dashboard() {
         <section className="flex flex-row flex-wrap w-full gap-4">
           <Card className="w-full lg:flex-1">
             <CardHeader>
-              <CardTitle>Estoque baixo</CardTitle>
+              <CardTitle className="subtitle">Estoque baixo</CardTitle>
               <CardDescription>
                 Produtos com quantidade próximas ou abaixo do mínimo
               </CardDescription>
@@ -147,7 +147,7 @@ export default function Dashboard() {
           </Card>
           <Card className="w-full lg:flex-1">
             <CardHeader>
-              <CardTitle>Produtos Estagnados</CardTitle>
+              <CardTitle className="subtitle">Produtos Estagnados</CardTitle>
               <CardDescription>
                 Sem saídas no período selecionado
               </CardDescription>

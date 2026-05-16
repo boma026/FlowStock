@@ -13,7 +13,7 @@ import { Register } from "@/types/Register";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-export default function Page() {
+export default function RegisterPage() {
   const {
     register,
     handleSubmit,

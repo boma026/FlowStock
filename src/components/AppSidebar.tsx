@@ -46,13 +46,13 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/dashboard">
+                  <a href="/category">
                     <Search />
                     <span>Categorias</span>
                   </a>
                 </SidebarMenuButton>
                 <SidebarMenuButton asChild>
-                  <a href="/dashboard">
+                  <a href="/users">
                     <User />
                     <span>Usuários</span>
                   </a>
@@ -67,7 +67,7 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/dashboard">
+                  <a href="/products">
                     <LayoutList />
                     <span>Produtos</span>
                   </a>

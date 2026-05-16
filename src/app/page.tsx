@@ -14,7 +14,7 @@ import { Login } from "@/types/Login";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-export default function Page() {
+export default function LoginPage() {
   const { register, handleSubmit, watch } = useForm<Login>();
   const router = useRouter();
 
