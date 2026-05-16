@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -117,7 +116,7 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-@layer base {
+@layer component {
   * {
     @apply border-border outline-ring/50;
   }
@@ -126,5 +125,15 @@
   }
   html {
     @apply font-sans;
+  }
+  .title {
+    @apply text-2xl font-extrabold text-foreground tracking-tight;
+  }
+
+  .subtitle {
+    @apply text-xl font-semibold text-foreground tracking-tight;
+  }
+  .text {
+    @apply text-sm font-medium text-muted-foreground;
   }
 }
