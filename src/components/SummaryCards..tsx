@@ -10,9 +10,14 @@ import {
 type SummaryCardsProps = {
   title: string;
   value: number;
+  footerText: string;
 };
 
-export const SummaryCards = ({ title, value }: SummaryCardsProps) => {
+export const SummaryCards = ({
+  title,
+  value,
+  footerText,
+}: SummaryCardsProps) => {
   return (
     <Card className="w-full lg:flex-1">
       <CardHeader>
@@ -20,10 +25,10 @@ export const SummaryCards = ({ title, value }: SummaryCardsProps) => {
         <CardAction className="title">$</CardAction>
       </CardHeader>
       <CardContent>
-        <p className="title">R${value}</p>
+        <p className="title">R${value.toFixed(2)}</p>
       </CardContent>
       <CardFooter>
-        <p className="text">Valor total atual</p>
+        <p className="text">{footerText}</p>
       </CardFooter>
     </Card>
   );

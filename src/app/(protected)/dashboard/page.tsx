@@ -77,7 +77,6 @@ export default function Dashboard() {
     };
 
     fetchProductsMoves();
-    console.log(products);
   }, []);
 
   return (
@@ -103,7 +102,12 @@ export default function Dashboard() {
         </header>
         <hr />
         <section className="mt-4 flex flex-wrap gap-6 ">
-          <SummaryCards title="Valor em estoque" value={stockValue} />
+          <SummaryCards
+            title="Valor em estoque"
+            value={stockValue}
+            footerText="Valor total atual"
+          />
+          {/*<SummaryCards title="Entradas no período" value={moveStats?.inboundValue.toFixed(2)} footerText={moveStats.inboundCount} {moveStats.inboundCount > 1 ? " Movimentações" : " Movimentação"}/>*/}
           <Card className="w-full lg:flex-1">
             <CardHeader>
               <CardTitle className="subtitle">Entradas do período</CardTitle>
@@ -159,42 +163,28 @@ export default function Dashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="mb-2">
-                <div className="flex justify-between">
-                  <h2 className="font-bold">Feijão 1kg</h2>
-                  <h2 className="font-bold">R$7,99</h2>
-                </div>
-                <div className="flex justify-between">
-                  <h2 className="text">Qnt: 4 un</h2>
-                  <h2 className="text">min: 5</h2>
-                </div>
-              </div>
-              <hr />
-            </CardContent>
-            <CardContent>
-              <div className="mb-2">
-                <div className="flex justify-between">
-                  <h2 className="font-bold">Feijão 1kg</h2>
-                  <h2 className="font-bold">R$7,99</h2>
-                </div>
-                <div className="flex justify-between">
-                  <h2 className="text">Qnt: 4 un</h2>
-                  <h2 className="text">min: 5</h2>
-                </div>
-              </div>
-              <hr />
-            </CardContent>
-            <CardContent>
-              <div className="mb-2">
-                <div className="flex justify-between">
-                  <h2 className="font-bold">Feijão 1kg</h2>
-                  <h2 className="font-bold">R$7,99</h2>
-                </div>
-                <div className="flex justify-between">
-                  <h2 className="text">Qnt: 4 un</h2>
-                  <h2 className="text">min: 5</h2>
-                </div>
-              </div>
+              {products.map((product) => {
+                const lowStockTrigger =
+                  product.quantity <= product.minQuantity * 1.6;
+                if (!lowStockTrigger) return null;
+                return (
+                  <div className="mb-2" key={product.id}>
+                    <div className="flex justify-between">
+                      <h2 className="font-bold">
+                        {product.name.charAt(0).toUpperCase() +
+                          product.name.slice(1)}
+                      </h2>
+                      <h2 className="font-bold">
+                        R${product.price.toFixed(2)}
+                      </h2>
+                    </div>
+                    <div className="flex justify-between">
+                      <h2 className="text">Qnt: {product.quantity} un</h2>
+                      <h2 className="text">min: {product.minQuantity}</h2>
+                    </div>
+                  </div>
+                );
+              })}
               <hr />
             </CardContent>
           </Card>
@@ -206,42 +196,28 @@ export default function Dashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="mb-2">
-                <div className="flex justify-between">
-                  <h2 className="font-bold">Feijão 1kg</h2>
-                  <h2 className="font-bold">R$7,99</h2>
-                </div>
-                <div className="flex justify-between">
-                  <h2 className="text">Qnt: 4 un</h2>
-                  <h2 className="text">min: 5</h2>
-                </div>
-              </div>
-              <hr />
-            </CardContent>
-            <CardContent>
-              <div className="mb-2">
-                <div className="flex justify-between">
-                  <h2 className="font-bold">Feijão 1kg</h2>
-                  <h2 className="font-bold">R$7,99</h2>
-                </div>
-                <div className="flex justify-between">
-                  <h2 className="text">Qnt: 4 un</h2>
-                  <h2 className="text">min: 5</h2>
-                </div>
-              </div>
-              <hr />
-            </CardContent>
-            <CardContent>
-              <div className="mb-2">
-                <div className="flex justify-between">
-                  <h2 className="font-bold">Feijão 1kg</h2>
-                  <h2 className="font-bold">R$7,99</h2>
-                </div>
-                <div className="flex justify-between">
-                  <h2 className="text">Qnt: 4 un</h2>
-                  <h2 className="text">min: 5</h2>
-                </div>
-              </div>
+              {products.map((product) => {
+                const lowStockTrigger =
+                  product.quantity <= product.minQuantity * 1.6;
+                if (!lowStockTrigger) return null;
+                return (
+                  <div className="mb-2" key={product.id}>
+                    <div className="flex justify-between">
+                      <h2 className="font-bold">
+                        {product.name.charAt(0).toUpperCase() +
+                          product.name.slice(1)}
+                      </h2>
+                      <h2 className="font-bold">
+                        R${product.price.toFixed(2)}
+                      </h2>
+                    </div>
+                    <div className="flex justify-between">
+                      <h2 className="text">Qnt: {product.quantity} un</h2>
+                      <h2 className="text">min: {product.minQuantity}</h2>
+                    </div>
+                  </div>
+                );
+              })}
               <hr />
             </CardContent>
           </Card>

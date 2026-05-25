@@ -11,19 +11,44 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Category } from "@/types/Category";
+import { api } from "@/utils/axios";
 import { Delete, SquarePen } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function CategoryPage() {
-  const categoryData: Category[] = [
-    { id: 1, name: "bebidas", quantityProducts: 2 },
-    { id: 2, name: "alimentos", quantityProducts: 2 },
-  ];
+  const router = useRouter();
+
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const res = await api.get("/category");
+        console.log("category", res.data);
+        setCategories(res.data);
+      } catch (error: unknown) {
+        console.error("Erro na requisição:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategory();
+  }, []);
+
+  const handleChangeToAddCategory = () => {
+    router.push("/category/create");
+  };
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">
       <header className="flex justify-between ">
         <p className="title">Categorias</p>
-        <Button size="lg">Nova categoria</Button>
+        <Button size="lg" onClick={handleChangeToAddCategory}>
+          Nova categoria
+        </Button>
       </header>
       <hr />
       <Table>
@@ -35,10 +60,13 @@ export default function CategoryPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {categoryData.map((category) => (
+          {categories.map((category) => (
             <TableRow key={category.id}>
               <TableCell className="font-medium">{category.name}</TableCell>
-              <TableCell>{category.quantityProducts} produtos</TableCell>
+              <TableCell>
+                {category.products.length}{" "}
+                {category.products.length >= 2 ? "produtos" : "produto"}
+              </TableCell>
               <TableCell className="flex justify-center items-center gap-2">
                 <Button>
                   <SquarePen />
