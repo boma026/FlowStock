@@ -2,6 +2,7 @@
 
 import { Chart } from "@/components/Chart";
 import { ModeToggle } from "@/components/ModeToggle";
+import { SummaryCards } from "@/components/SummaryCards.";
 import {
   Card,
   CardAction,
@@ -29,23 +30,32 @@ export default function Dashboard() {
   const [moves, setMoves] = useState<Moves[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const stockValue = products.reduce((acc, product) => {
-    return acc + product.price * product.quantity;
-  }, 0);
+  const stockValue = Array.isArray(products)
+    ? products.reduce((acc, product) => {
+        return acc + product.price * product.quantity;
+      }, 0)
+    : 0;
 
-  const moveStats = moves.reduce(
-    (acc, move) => {
-      if (move.type === "Inbound") {
-        acc.inboundValue = move.price;
-        acc.inboundCount++;
-      } else {
-        acc.outboundValue = move.price;
-        acc.outboundCount++;
-      }
-      return acc;
-    },
-    { inboundValue: 0, outboundValue: 0, inboundCount: 0, outboundCount: 0 },
-  ) ?? { inboundValue: 0, outboundValue: 0, inboundCount: 0, outboundCount: 0 };
+  const moveStats = Array.isArray(moves)
+    ? moves.reduce(
+        (acc, move) => {
+          if (move.type === "Inbound") {
+            acc.inboundValue = move.price;
+            acc.inboundCount++;
+          } else {
+            acc.outboundValue = move.price;
+            acc.outboundCount++;
+          }
+          return acc;
+        },
+        {
+          inboundValue: 0,
+          outboundValue: 0,
+          inboundCount: 0,
+          outboundCount: 0,
+        },
+      )
+    : { inboundValue: 0, outboundValue: 0, inboundCount: 0, outboundCount: 0 };
 
   useEffect(() => {
     const fetchProductsMoves = async () => {
@@ -65,7 +75,9 @@ export default function Dashboard() {
         setLoading(false);
       }
     };
+
     fetchProductsMoves();
+    console.log(products);
   }, []);
 
   return (
@@ -91,25 +103,14 @@ export default function Dashboard() {
         </header>
         <hr />
         <section className="mt-4 flex flex-wrap gap-6 ">
-          <Card className="w-full lg:flex-1">
-            <CardHeader>
-              <CardTitle className="subtitle">Valor em estoque</CardTitle>
-              <CardAction className="title">$</CardAction>
-            </CardHeader>
-            <CardContent>
-              <p className="title">R${stockValue}</p>
-            </CardContent>
-            <CardFooter>
-              <p className="text">Valor total atual</p>
-            </CardFooter>
-          </Card>
+          <SummaryCards title="Valor em estoque" value={stockValue} />
           <Card className="w-full lg:flex-1">
             <CardHeader>
               <CardTitle className="subtitle">Entradas do período</CardTitle>
               <CardAction className="title">$</CardAction>
             </CardHeader>
             <CardContent>
-              <p className="title">R${moveStats.inboundValue.toFixed(2)}</p>
+              <p className="title">R${moveStats?.inboundValue.toFixed(2)}</p>
             </CardContent>
             <CardFooter>
               <p className="text">
