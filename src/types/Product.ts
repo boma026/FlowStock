@@ -1,9 +1,9 @@
-import { Category } from "./Category";
-
 export type Product = {
   id: number;
   name: string;
-  category: Pick<Category, "name">;
-  quantInStock: number;
+  categoryId: number;
+  minQuantity: number;
+  maxQuatity: number;
+  quantity: number;
   price: number;
 };

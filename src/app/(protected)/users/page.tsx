@@ -13,7 +13,7 @@ import {
 import { User } from "@/types/User";
 import { Delete, SquarePen } from "lucide-react";
 
-export default function CategoryPage() {
+export default function UsersPage() {
   const categoryData: User[] = [
     { id: 1, email: "arthurboma@teste.com", role: "USER" },
     { id: 2, email: "arthurboma@teste2.com", role: "USER" },
@@ -29,8 +29,8 @@ export default function CategoryPage() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-1/3">Nome</TableHead>
-            <TableHead className="w-1/3">Produtos</TableHead>
+            <TableHead className="w-1/3">Email</TableHead>
+            <TableHead className="w-1/3">Role</TableHead>
             <TableHead className="w-1/3 text-center">Ações</TableHead>
           </TableRow>
         </TableHeader>
