@@ -12,9 +12,21 @@ import {
 } from "@/components/ui/table";
 import { Category } from "@/types/Category";
 import { api } from "@/utils/axios";
-import { Delete, SquarePen } from "lucide-react";
+import { Delete, SquarePen, Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function CategoryPage() {
   const router = useRouter();
@@ -26,7 +38,6 @@ export default function CategoryPage() {
     const fetchCategory = async () => {
       try {
         const res = await api.get("/category");
-        console.log("category", res.data);
         setCategories(res.data);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
@@ -36,10 +47,26 @@ export default function CategoryPage() {
     };
 
     fetchCategory();
-  }, []);
+  }, [categories]);
 
   const handleChangeToAddCategory = () => {
     router.push("/category/create");
+  };
+
+  const handleUpdateCategory = (id: number) => {
+    router.push(`/category/${id}`);
+  };
+
+  const handleDeleteCategory = async (id: number) => {
+    try {
+      console.log("passou aq");
+      const res = await api.delete(`/category/${id}`);
+      console.log("category", res.data);
+    } catch (error: unknown) {
+      console.error("Erro na requisição:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -68,13 +95,42 @@ export default function CategoryPage() {
                 {category.products.length >= 2 ? "produtos" : "produto"}
               </TableCell>
               <TableCell className="flex justify-center items-center gap-2">
-                <Button>
+                <Button onClick={() => handleUpdateCategory(category.id)}>
                   <SquarePen />
                 </Button>
-
-                <Button variant="destructive">
-                  <Delete />
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="destructive"
+                      disabled={category.products.length >= 1 ? true : false}
+                    >
+                      <Delete />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent size="sm">
+                    <AlertDialogHeader>
+                      <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                        <Trash2Icon />
+                      </AlertDialogMedia>
+                      <AlertDialogTitle>Deletar categoria?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Tem certeza? Isto irá deletar a categoria
+                        pemanentemente.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel variant="outline">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        variant="destructive"
+                        onClick={() => handleDeleteCategory(category.id)}
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </TableCell>
             </TableRow>
           ))}

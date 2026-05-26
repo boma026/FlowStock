@@ -9,38 +9,38 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-export default function CategoryPage() {
+export default function CategoryCreatePage() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const { register, handleSubmit } = useForm<Category>();
 
-  /*const handleCreateCategory = async () => {
-      try {
-        const res = await api.post("/category", {
-          body: 
-        });
-        console.log("category", res.data);
-      } catch (error: unknown) {
-        console.error("Erro na requisição:", error);
-      } finally {
-        setLoading(false);
-        router.push("/category");
-      }
-    };
-*/
+  const handleCreateCategory = async (data: Category) => {
+    try {
+      const res = await api.post("/category", {
+        name: data.name,
+      });
+      console.log("category", res.data);
+    } catch (error: unknown) {
+      console.error("Erro na requisição:", error);
+    } finally {
+      setLoading(false);
+      router.push("/category");
+    }
+  };
+
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">
       <header className="flex justify-between ">
         <p className="title">Nova categoria</p>
       </header>
       <hr />
-      <form>
-        <div className="flex flex-col gap-2">
+      <form onSubmit={handleSubmit(handleCreateCategory)}>
+        <div className="flex flex-col gap-2 ml-4">
           <label htmlFor="category" className="font-extrabold">
             Nome da categoria
           </label>
           <Input
-            className="w-1/2"
+            className="w-1/2 mb-4"
             placeholder="Nome da categoria"
             id="category"
             type="text"
