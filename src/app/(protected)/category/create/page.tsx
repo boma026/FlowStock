@@ -16,7 +16,7 @@ export default function CategoryCreatePage() {
 
   const handleCreateCategory = async (data: Category) => {
     try {
-      const res = await api.post("/category", {
+      const res = await api.post("/categories", {
         name: data.name,
       });
       console.log("category", res.data);

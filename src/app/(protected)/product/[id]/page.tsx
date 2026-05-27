@@ -29,7 +29,7 @@ export default function ProductUpdatePage() {
 
   const handleUpdateProduct = async (data: Product) => {
     try {
-      const res = await api.put(`/product/${id}`, {
+      const res = await api.put(`/products/${id}`, {
         name: data.name,
         price: data.price,
         categoryId: data.categoryId,
@@ -50,8 +50,8 @@ export default function ProductUpdatePage() {
       setLoading(true);
       try {
         const [product, categories] = await Promise.all([
-          api.get(`/product/${id}`),
-          api.get("/category"),
+          api.get(`/products/${id}`),
+          api.get("/categories"),
         ]);
         console.log("produto", product.data);
         console.log("categories", categories.data);

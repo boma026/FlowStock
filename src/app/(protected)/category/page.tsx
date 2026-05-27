@@ -60,7 +60,7 @@ export default function CategoryPage() {
   const handleDeleteCategory = async (id: number) => {
     try {
       console.log("passou aq");
-      const res = await api.delete(`/category/${id}`);
+      const res = await api.delete(`/categories/${id}`);
       console.log("category", res.data);
     } catch (error: unknown) {
       console.error("Erro na requisição:", error);

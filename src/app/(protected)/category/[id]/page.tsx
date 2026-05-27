@@ -19,7 +19,7 @@ export default function CategoryUpdatePage() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const res = await api.get(`category/${id}`);
+        const res = await api.get(`categories/${id}`);
         console.log("category", res.data);
         setCategory(res.data);
       } catch (error: unknown) {

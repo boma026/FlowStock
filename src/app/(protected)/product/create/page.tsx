@@ -27,7 +27,7 @@ export default function ProductCreatePage() {
 
   const handleCreateProduct = async (data: Product) => {
     try {
-      const res = await api.post("/product", {
+      const res = await api.post("/products", {
         name: data.name,
         price: data.price,
         categoryId: data.categoryId,
@@ -46,7 +46,7 @@ export default function ProductCreatePage() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const res = await api.get("/category");
+        const res = await api.get("/categories");
         setCategories(res.data);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);

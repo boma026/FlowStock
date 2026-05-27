@@ -43,7 +43,7 @@ export default function ProductPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await api.get("/product");
+        const res = await api.get("/products");
         setProducts(res.data);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
@@ -65,7 +65,7 @@ export default function ProductPage() {
 
   const handleDeleteProduct = async (id: number) => {
     try {
-      const res = await api.delete(`/product/${id}`);
+      const res = await api.delete(`/products/${id}`);
       console.log("product", res.data);
     } catch (error: unknown) {
       console.error("Erro na requisição:", error);
