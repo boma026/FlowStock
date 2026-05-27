@@ -20,14 +20,14 @@ import {
 import { Category } from "@/types/Category";
 
 export default function ProductUpdatePage() {
-  const router = useRouter();
   const { id } = useParams();
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const { register, handleSubmit } = useForm<Product>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [product, setProduct] = useState<Product>();
 
-  const handleCreateProduct = async (data: Product) => {
+  const handleUpdateProduct = async (data: Product) => {
     try {
       const res = await api.put(`/product/${id}`, {
         name: data.name,
@@ -47,9 +47,10 @@ export default function ProductUpdatePage() {
 
   useEffect(() => {
     const fetchProductCategories = async () => {
+      setLoading(true);
       try {
         const [product, categories] = await Promise.all([
-          api.get(`/product/{id}`),
+          api.get(`/product/${id}`),
           api.get("/category"),
         ]);
         console.log("produto", product.data);
@@ -69,10 +70,10 @@ export default function ProductUpdatePage() {
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">
       <header className="flex justify-between ">
-        <p className="title">Editar produto</p>
+        <p className="title">Novo produto</p>
       </header>
       <hr />
-      <form onSubmit={handleSubmit(handleCreateProduct)}>
+      <form onSubmit={handleSubmit(handleUpdateProduct)}>
         <div className="flex flex-col gap-2 ml-4 w-1/2">
           <label htmlFor="name" className="font-extrabold">
             Nome do produto
@@ -81,8 +82,8 @@ export default function ProductUpdatePage() {
             className="w-1/2 mb-4"
             placeholder="Nome do produto"
             id="name"
-            type="text"
             defaultValue={product?.name}
+            type="text"
             {...register("name")}
           />
           <div className="flex gap-6">
@@ -111,7 +112,7 @@ export default function ProductUpdatePage() {
                 id="name"
                 type="text"
                 defaultValue={0}
-                {...register("price")}
+                {...register("price", { required: true })}
               />
             </div>
           </div>
@@ -144,7 +145,7 @@ export default function ProductUpdatePage() {
             </div>
           </div>
           <Button size="lg" type="submit">
-            Salvar alterações
+            Criar produto
           </Button>
         </div>
       </form>

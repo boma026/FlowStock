@@ -46,7 +46,7 @@ export default function CategoryCreatePage() {
             type="text"
             {...register("name", { required: true })}
           />
-          <Button size="lg" className="w-1/12" type="submit">
+          <Button size="lg" className="w-1/10" type="submit">
             Criar categoria
           </Button>
         </div>

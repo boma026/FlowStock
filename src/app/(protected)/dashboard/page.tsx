@@ -62,7 +62,7 @@ export default function Dashboard() {
       setLoading(true);
       try {
         const [products, moves] = await Promise.all([
-          api.get("/products"),
+          api.get("/product"),
           api.get("/moves"),
         ]);
         console.log("produtos", products.data);
