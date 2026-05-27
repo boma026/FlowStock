@@ -18,6 +18,7 @@ import {
   Search,
   User,
 } from "lucide-react";
+import Link from "next/link";
 
 export function AppSidebar() {
   return (
@@ -46,16 +47,16 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/category">
+                  <Link href="/category">
                     <Search />
                     <span>Categorias</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
                 <SidebarMenuButton asChild>
-                  <a href="/users">
+                  <Link href="/users">
                     <User />
                     <span>Usuários</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -67,16 +68,16 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/products">
+                  <Link href="/product">
                     <LayoutList />
                     <span>Produtos</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
                 <SidebarMenuButton asChild>
-                  <a href="/moves">
+                  <Link href="/moves">
                     <Container />
                     <span>Entrada/Saída</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

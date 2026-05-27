@@ -22,7 +22,7 @@ export default function MovesPage() {
     {
       id: 1,
       date: new Date("2024-01-10"),
-      type: "Entrada",
+      type: "Inbound",
       product: { name: "Arroz 5kg" },
       quantity: 50,
       price: 24,
