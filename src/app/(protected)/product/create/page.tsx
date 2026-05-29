@@ -7,7 +7,7 @@ import { Product } from "@/types/Product";
 import { api } from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -22,7 +22,7 @@ import { Category } from "@/types/Category";
 export default function ProductCreatePage() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const { register, handleSubmit } = useForm<Product>();
+  const { register, handleSubmit, control } = useForm<Product>();
   const [categories, setCategories] = useState<Category[]>([]);
 
   const handleCreateProduct = async (data: Product) => {
@@ -77,22 +77,38 @@ export default function ProductCreatePage() {
             {...register("name", { required: true })}
           />
           <div className="flex gap-6">
-            <div className="flex flex-col flex:1 w-full">
+            <div className="flex flex-col flex-1 w-full">
               <label htmlFor="produto" className="font-extrabold">
                 Categoria
               </label>
-              <select
-                className="border-2 rounded-md p-1"
-                {...register("categoryId", { required: true })}
-              >
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                control={control}
+                name="categoryId"
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value?.toString()}
+                  >
+                    <SelectTrigger className="w-1/2" onBlur={field.onBlur}>
+                      <SelectValue placeholder="Selecione uma categoria" />
+                    </SelectTrigger>
+                    <SelectContent position="popper">
+                      <SelectGroup>
+                        {categories.map((category) => (
+                          <SelectItem
+                            key={category.id}
+                            value={category.id.toString()}
+                          >
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
-            <div className="flex flex-col flex:1 w-full">
+            <div className="flex flex-col flex-1 w-full">
               <label htmlFor="name" className="font-extrabold">
                 Preço Unitário (em R$)
               </label>

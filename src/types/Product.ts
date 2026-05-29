@@ -1,4 +1,5 @@
 import { Category } from "./Category";
+import { Moves } from "./Moves";
 
 export type Product = {
   id: number;
@@ -9,4 +10,5 @@ export type Product = {
   maxQuantity: number;
   quantity: number;
   price: number;
+  moves: Moves[];
 };

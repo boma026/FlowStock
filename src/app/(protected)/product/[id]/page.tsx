@@ -28,13 +28,24 @@ export default function ProductUpdatePage() {
   const [product, setProduct] = useState<Product>();
 
   const handleUpdateProduct = async (data: Product) => {
+    const updatedData = Object.fromEntries(
+      Object.entries(data).map((item) => {
+        const key = item[0];
+        const value = item[1];
+
+        const newValue = value === "" ? undefined : value;
+
+        return [key, newValue];
+      }),
+    ) as Partial<Product>;
+    console.log(updatedData);
     try {
       const res = await api.put(`/products/${id}`, {
-        name: data.name,
-        price: data.price,
-        categoryId: data.categoryId,
-        maxQuantity: data.maxQuantity,
-        minQuantity: data.minQuantity,
+        name: updatedData.name,
+        price: updatedData.price,
+        categoryId: updatedData.categoryId,
+        maxQuantity: updatedData.maxQuantity,
+        minQuantity: updatedData.minQuantity,
       });
       console.log("Product", res.data);
     } catch (error: unknown) {
@@ -92,6 +103,7 @@ export default function ProductUpdatePage() {
                 Categoria
               </label>
               <select
+                defaultValue={product?.categoryId}
                 className="border-2 rounded-md p-1"
                 {...register("categoryId")}
               >
@@ -111,7 +123,7 @@ export default function ProductUpdatePage() {
                 placeholder="Nome da categoria"
                 id="name"
                 type="text"
-                defaultValue={0}
+                defaultValue={product?.price}
                 {...register("price", { required: true })}
               />
             </div>
@@ -126,7 +138,7 @@ export default function ProductUpdatePage() {
                 placeholder="Nome da categoria"
                 id="name"
                 type="text"
-                defaultValue={0}
+                defaultValue={product?.minQuantity}
                 {...register("minQuantity")}
               />
             </div>
@@ -139,13 +151,13 @@ export default function ProductUpdatePage() {
                 placeholder="Nome da categoria"
                 id="name"
                 type="text"
-                defaultValue={0}
+                defaultValue={product?.maxQuantity}
                 {...register("maxQuantity")}
               />
             </div>
           </div>
-          <Button size="lg" type="submit">
-            Criar produto
+          <Button size="lg" type="submit" className="w-1/4">
+            Salvar alterações
           </Button>
         </div>
       </form>

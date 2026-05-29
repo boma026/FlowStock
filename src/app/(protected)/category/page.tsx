@@ -37,7 +37,7 @@ export default function CategoryPage() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const res = await api.get("/category");
+        const res = await api.get("/categories");
         setCategories(res.data);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);

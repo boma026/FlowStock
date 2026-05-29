@@ -44,6 +44,7 @@ export default function ProductPage() {
     const fetchProduct = async () => {
       try {
         const res = await api.get("/products");
+        console.log(res.data);
         setProducts(res.data);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
@@ -115,7 +116,10 @@ export default function ProductPage() {
                 </Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="destructive">
+                    <Button
+                      variant="destructive"
+                      disabled={product.moves.length >= 1 ? true : false}
+                    >
                       <Delete />
                     </Button>
                   </AlertDialogTrigger>

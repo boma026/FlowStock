@@ -14,98 +14,42 @@ import {
 } from "@/components/ui/table";
 import { Moves } from "@/types/Moves";
 import { Product } from "@/types/Product";
+import { api } from "@/utils/axios";
 import { Delete, SquarePen } from "lucide-react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function MovesPage() {
-  const movesData: Moves[] = [
-    {
-      id: 1,
-      date: new Date("2024-01-10"),
-      type: "Inbound",
-      product: { name: "Arroz 5kg" },
-      quantity: 50,
-      price: 24,
-    },
-    {
-      id: 2,
-      date: new Date("2024-01-12"),
-      type: "Saída",
-      product: { name: "Feijão 1kg" },
-      quantity: 10,
-      price: 8,
-    },
-    {
-      id: 3,
-      date: new Date("2024-01-15"),
-      type: "Entrada",
-      product: { name: "Água Mineral 1,5L" },
-      quantity: 100,
-      price: 3,
-    },
-    {
-      id: 4,
-      date: new Date("2024-01-18"),
-      type: "Saída",
-      product: { name: "Refrigerante 2L" },
-      quantity: 20,
-      price: 10,
-    },
-    {
-      id: 5,
-      date: new Date("2024-01-20"),
-      type: "Entrada",
-      product: { name: "Macarrão 500g" },
-      quantity: 80,
-      price: 5,
-    },
-    {
-      id: 6,
-      date: new Date("2024-01-22"),
-      type: "Saída",
-      product: { name: "Azeite 500ml" },
-      quantity: 5,
-      price: 32,
-    },
-    {
-      id: 7,
-      date: new Date("2024-01-25"),
-      type: "Entrada",
-      product: { name: "Suco de Laranja 1L" },
-      quantity: 60,
-      price: 9,
-    },
-    {
-      id: 8,
-      date: new Date("2024-01-27"),
-      type: "Saída",
-      product: { name: "Leite Integral 1L" },
-      quantity: 15,
-      price: 7,
-    },
-    {
-      id: 9,
-      date: new Date("2024-01-29"),
-      type: "Entrada",
-      product: { name: "Café Solúvel 100g" },
-      quantity: 40,
-      price: 15,
-    },
-    {
-      id: 10,
-      date: new Date("2024-01-30"),
-      type: "Saída",
-      product: { name: "Farinha de Trigo 1kg" },
-      quantity: 25,
-      price: 6,
-    },
-  ];
+  const router = useRouter();
+  const [moves, setMoves] = useState<Moves[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchMoves = async () => {
+      try {
+        const res = await api.get("/moves");
+        setMoves(res.data);
+      } catch (error: unknown) {
+        console.error("Erro na requisição:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMoves();
+  }, []);
+
+  const handleChangeToAddMove = () => {
+    router.push("/moves/create");
+  };
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">
       <header className="flex justify-between ">
         <p className="title">Movimentações</p>
-        <Button size="lg">Nova movimentação</Button>
+        <Button size="lg" onClick={handleChangeToAddMove}>
+          Nova movimentação
+        </Button>
       </header>
       <hr />
       <Table>
@@ -119,15 +63,19 @@ export default function MovesPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {movesData.map((move) => (
+          {moves.map((move) => (
             <TableRow key={move.id}>
               <TableCell className="font-medium">
-                {move.date.toLocaleDateString()}
+                {new Date(move.createdAt).toLocaleDateString("pt-BR")}
               </TableCell>
-              <TableCell>{move.type}</TableCell>
+              <TableCell
+                className={` font-bold ${move.type === "Inbound" ? "text-green-400" : "text-red-400"} `}
+              >
+                {move.type === "Inbound" ? "Entrada" : "Saída"}
+              </TableCell>
               <TableCell>{move.product.name}</TableCell>
               <TableCell>{move.quantity}</TableCell>
-              <TableCell>{move.price}</TableCell>
+              <TableCell>R${move.price.toFixed(2)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
