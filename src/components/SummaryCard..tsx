@@ -7,17 +7,13 @@ import {
   CardTitle,
 } from "./ui/card";
 
-type SummaryCardsProps = {
+type SummaryCardProps = {
   title: string;
   value: number;
   footerText: string;
 };
 
-export const SummaryCards = ({
-  title,
-  value,
-  footerText,
-}: SummaryCardsProps) => {
+export const SummaryCard = ({ title, value, footerText }: SummaryCardProps) => {
   return (
     <Card className="w-full lg:flex-1">
       <CardHeader>

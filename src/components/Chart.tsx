@@ -9,22 +9,14 @@ import {
 } from "@/components/ui/chart";
 
 import { type ChartConfig } from "@/components/ui/chart";
-import { Moves } from "@/types/Moves";
 import { ChartData } from "@/types/ChartData";
 
 type ChartProps = {
-  moves: Moves[];
   chartDisplay: string;
-  chartData30Days: ChartData[];
-  chartData7days: ChartData[];
+  chartData: ChartData[];
 };
 
-export function Chart({
-  moves,
-  chartDisplay,
-  chartData30Days,
-  chartData7days,
-}: ChartProps) {
+export function Chart({ chartData, chartDisplay }: ChartProps) {
   const chartConfig = {
     price: {
       label: "Moves (R$)",
@@ -35,10 +27,7 @@ export function Chart({
   return (
     <ChartContainer config={chartConfig} className="min-h-50 w-full">
       {/* Passamos o 'chartData' agregado para o BarChart */}
-      <BarChart
-        accessibilityLayer
-        data={chartDisplay === "weekly" ? chartData7days : chartData30Days}
-      >
+      <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={true} />
         <XAxis
           dataKey="date" // Mudamos para "date" para bater com o formato "DD/MM" que criamos

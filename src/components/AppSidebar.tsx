@@ -31,7 +31,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild className="ml-2">
+                <SidebarMenuButton asChild>
                   <a href="/dashboard">
                     <LayoutDashboard />
                     <span>Dashboard</span>
