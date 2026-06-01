@@ -11,21 +11,40 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Login } from "@/types/Login";
+import { api } from "@/utils/axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function LoginPage() {
   const { register, handleSubmit, watch } = useForm<Login>();
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChangeToRegister = () => {
     router.push("/register");
   };
 
+  const handleGrantAcess = async (data: Login) => {
+    try {
+      const res = await api.post("/users/login", {
+        email: data.email,
+        password: data.password,
+      });
+
+      console.log("token", res.data);
+    } catch (error: unknown) {
+      console.error("Erro na requisição:", error);
+    } finally {
+      setLoading(false);
+      //router.push("/");
+    }
+  };
+
   return (
     <div className=" relative w-full min-h-screen flex justify-center items-center">
       <Card className="w-full max-w-sm">
-        <form onSubmit={handleSubmit((data) => console.log(data))}>
+        <form onSubmit={handleSubmit(handleGrantAcess)}>
           <CardHeader>
             <CardTitle className="text-center">FlowStock Login</CardTitle>
           </CardHeader>

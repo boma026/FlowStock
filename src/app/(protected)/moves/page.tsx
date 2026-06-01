@@ -29,6 +29,7 @@ export default function MovesPage() {
       try {
         const res = await api.get("/moves");
         setMoves(res.data);
+        console.log(res.data);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
       } finally {
@@ -66,7 +67,7 @@ export default function MovesPage() {
           {moves.map((move) => (
             <TableRow key={move.id}>
               <TableCell className="font-medium">
-                {new Date(move.createdAt).toLocaleDateString("pt-BR")}
+                {move.createdAt.toString()}
               </TableCell>
               <TableCell
                 className={` font-bold ${move.type === "Inbound" ? "text-green-400" : "text-red-400"} `}

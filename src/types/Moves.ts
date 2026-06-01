@@ -2,7 +2,7 @@ import { Product } from "./Product";
 
 export type Moves = {
   id: number;
-  createdAt: Date;
+  createdAt: string;
   productId: string;
   product: Product;
   quantity: number;

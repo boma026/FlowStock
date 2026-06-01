@@ -7,43 +7,48 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
+
 import { type ChartConfig } from "@/components/ui/chart";
-export function Chart() {
+import { Moves } from "@/types/Moves";
+import { ChartData } from "@/types/ChartData";
+
+type ChartProps = {
+  moves: Moves[];
+  chartDisplay: string;
+  chartData30Days: ChartData[];
+  chartData7days: ChartData[];
+};
+
+export function Chart({
+  moves,
+  chartDisplay,
+  chartData30Days,
+  chartData7days,
+}: ChartProps) {
   const chartConfig = {
-    desktop: {
-      label: "Desktop",
+    price: {
+      label: "Moves (R$)",
       color: "var(--chart-1)",
-    },
-    mobile: {
-      label: "Mobile",
-      color: "var(--chart-2)",
     },
   } satisfies ChartConfig;
 
-  const chartData = [
-    { month: "January", desktop: 186, mobile: 80 },
-    { month: "February", desktop: 305, mobile: 200 },
-    { month: "March", desktop: 237, mobile: 120 },
-    { month: "April", desktop: 73, mobile: 190 },
-    { month: "May", desktop: 209, mobile: 130 },
-    { month: "June", desktop: 214, mobile: 140 },
-  ];
-
   return (
     <ChartContainer config={chartConfig} className="min-h-50 w-full">
-      <BarChart accessibilityLayer data={chartData}>
-        <CartesianGrid vertical={false} />
+      {/* Passamos o 'chartData' agregado para o BarChart */}
+      <BarChart
+        accessibilityLayer
+        data={chartDisplay === "weekly" ? chartData7days : chartData30Days}
+      >
+        <CartesianGrid vertical={true} />
         <XAxis
-          dataKey="month"
+          dataKey="date" // Mudamos para "date" para bater com o formato "DD/MM" que criamos
           tickLine={false}
-          tickMargin={10}
+          tickMargin={20}
           axisLine={false}
-          tickFormatter={(value) => value.slice(0, 3)}
         />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+        <Bar dataKey="price" fill="var(--color-move)" radius={4} />
       </BarChart>
     </ChartContainer>
   );

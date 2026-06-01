@@ -10,7 +10,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Register } from "@/types/Register";
+import { api } from "@/utils/axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function RegisterPage() {
@@ -20,17 +22,31 @@ export default function RegisterPage() {
     getValues,
     formState: { errors },
   } = useForm<Register>();
+
   const router = useRouter();
 
-  const handleChangeToRegister = () => {
-    router.push("/");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleCreateUser = async (data: Register) => {
+    try {
+      const res = await api.post("/users", {
+        email: data.email,
+        password: data.password,
+      });
+
+      console.log("User", res.data);
+    } catch (error: unknown) {
+      console.error("Erro na requisição:", error);
+    } finally {
+      setLoading(false);
+      router.push("/");
+    }
   };
 
-  console.log(getValues("password"));
   return (
     <div className="w-full min-h-screen flex justify-center items-center">
       <Card className="w-full max-w-sm">
-        <form onSubmit={handleSubmit((data) => console.log(data))}>
+        <form onSubmit={handleSubmit(handleCreateUser)}>
           <CardHeader>
             <CardTitle className="text-center">FlowStock</CardTitle>
           </CardHeader>
