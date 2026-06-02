@@ -25,10 +25,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Product } from "@/types/Product";
-import { api } from "@/utils/axios";
 import { Delete, SquarePen, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { productsService } from "@/services/productService";
 
 export default function ProductPage() {
   const router = useRouter();
@@ -43,9 +43,9 @@ export default function ProductPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await api.get("/products");
-        console.log(res.data);
-        setProducts(res.data);
+        setLoading(true);
+        const products = await productsService.getAllProducts();
+        setProducts(products);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
       } finally {
@@ -66,14 +66,24 @@ export default function ProductPage() {
 
   const handleDeleteProduct = async (id: number) => {
     try {
-      const res = await api.delete(`/products/${id}`);
-      console.log("product", res.data);
+      setLoading(true);
+      await productsService.deleteProduct(id);
+      const products = await productsService.getAllProducts();
+      setProducts(products);
     } catch (error: unknown) {
       console.error("Erro na requisição:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="p-4 flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">

@@ -52,12 +52,6 @@ export function AppSidebar() {
                     <span>Categorias</span>
                   </Link>
                 </SidebarMenuButton>
-                <SidebarMenuButton asChild>
-                  <Link href="/users">
-                    <User />
-                    <span>Usuários</span>
-                  </Link>
-                </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>

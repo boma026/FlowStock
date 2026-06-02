@@ -8,16 +8,8 @@ import { api } from "@/utils/axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Category } from "@/types/Category";
+import { productsService } from "@/services/productService";
 
 export default function ProductUpdatePage() {
   const { id } = useParams();
@@ -27,39 +19,10 @@ export default function ProductUpdatePage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [product, setProduct] = useState<Product>();
 
-  const handleUpdateProduct = async (data: Product) => {
-    const updatedData = Object.fromEntries(
-      Object.entries(data).map((item) => {
-        const key = item[0];
-        const value = item[1];
-
-        const newValue = value === "" ? undefined : value;
-
-        return [key, newValue];
-      }),
-    ) as Partial<Product>;
-    console.log(updatedData);
-    try {
-      const res = await api.put(`/products/${id}`, {
-        name: updatedData.name,
-        price: updatedData.price,
-        categoryId: updatedData.categoryId,
-        maxQuantity: updatedData.maxQuantity,
-        minQuantity: updatedData.minQuantity,
-      });
-      console.log("Product", res.data);
-    } catch (error: unknown) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-      router.push("/product");
-    }
-  };
-
   useEffect(() => {
     const fetchProductCategories = async () => {
-      setLoading(true);
       try {
+        setLoading(true);
         const [product, categories] = await Promise.all([
           api.get(`/products/${id}`),
           api.get("/categories"),
@@ -77,6 +40,37 @@ export default function ProductUpdatePage() {
 
     fetchProductCategories();
   }, []);
+
+  const handleUpdateProduct = async (data: Product) => {
+    const updatedData = Object.fromEntries(
+      Object.entries(data).map((item) => {
+        const key = item[0];
+        const value = item[1];
+
+        const newValue = value === "" ? undefined : value;
+
+        return [key, newValue];
+      }),
+    ) as Partial<Product>;
+    console.log(updatedData);
+    try {
+      setLoading(true);
+      await productsService.updateProduct(Number(id), data);
+    } catch (error: unknown) {
+      console.error("Erro na requisição:", error);
+    } finally {
+      setLoading(false);
+      router.push("/product");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-4 flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">

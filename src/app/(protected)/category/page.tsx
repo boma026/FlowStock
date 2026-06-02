@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Category } from "@/types/Category";
-import { api } from "@/utils/axios";
 import { Delete, SquarePen, Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -27,27 +26,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { categoryService } from "@/services/categoryService";
 
 export default function CategoryPage() {
   const router = useRouter();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const res = await api.get("/categories");
-        setCategories(res.data);
-      } catch (error: unknown) {
-        console.error("Erro na requisição:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategory();
-  }, [categories]);
 
   const handleChangeToAddCategory = () => {
     router.push("/category/create");
@@ -59,15 +44,39 @@ export default function CategoryPage() {
 
   const handleDeleteCategory = async (id: number) => {
     try {
-      console.log("passou aq");
-      const res = await api.delete(`/categories/${id}`);
-      console.log("category", res.data);
+      setLoading(true);
+      await categoryService.deleteCategory(id);
+      const categories = await categoryService.getAllCategories();
+      setCategories(categories);
     } catch (error: unknown) {
       console.error("Erro na requisição:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        setLoading(true);
+        const categories = await categoryService.getAllCategories();
+        setCategories(categories);
+      } catch (error: unknown) {
+        console.error("Erro na requisição:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategory();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="p-4 flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">

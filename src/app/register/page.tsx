@@ -43,6 +43,14 @@ export default function RegisterPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="p-4 flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
+  }
+
   return (
     <div className="w-full min-h-screen flex justify-center items-center">
       <Card className="w-full max-w-sm">

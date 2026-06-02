@@ -11,6 +11,7 @@ import {
   ComboboxList,
 } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
+import { movesService } from "@/services/movesService";
 import { Moves } from "@/types/Moves";
 import { Product } from "@/types/Product";
 import { api } from "@/utils/axios";
@@ -32,12 +33,8 @@ export default function MoveCreatePage() {
 
   const handleCreateMove = async (data: Moves) => {
     try {
-      const res = await api.post("/moves", {
-        quantity: data.quantity,
-        type: data.type,
-        productId: data.productId,
-      });
-      console.log("Product", res.data);
+      setLoading(true);
+      await movesService.createMoves(data);
     } catch (error: unknown) {
       console.error("Erro na requisição:", error);
     } finally {
@@ -60,6 +57,14 @@ export default function MoveCreatePage() {
 
     fetchProducts();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="p-4 flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">

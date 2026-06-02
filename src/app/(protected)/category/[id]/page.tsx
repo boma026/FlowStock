@@ -3,8 +3,8 @@
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { categoryService } from "@/services/categoryService";
 import { Category } from "@/types/Category";
-import { api } from "@/utils/axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,9 +19,10 @@ export default function CategoryUpdatePage() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const res = await api.get(`categories/${id}`);
-        console.log("category", res.data);
-        setCategory(res.data);
+        setLoading(true);
+        const category = await categoryService.getCategoryById(Number(id));
+        console.log("category", category);
+        setCategory(category);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
       } finally {
@@ -34,10 +35,9 @@ export default function CategoryUpdatePage() {
 
   const handleUpdateCategory = async (data: Category) => {
     try {
-      const res = await api.put(`/category/${id}`, {
-        name: data.name,
-      });
-      console.log("category", res.data);
+      setLoading(true);
+      const category = await categoryService.updateCategory(Number(id), data);
+      console.log("category", category);
     } catch (error: unknown) {
       console.error("Erro na requisição:", error);
     } finally {
@@ -45,6 +45,14 @@ export default function CategoryUpdatePage() {
       router.push("/category");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="p-4 flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">

@@ -18,6 +18,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Category } from "@/types/Category";
+import { productsService } from "@/services/productService";
+import { categoryService } from "@/services/categoryService";
 
 export default function ProductCreatePage() {
   const router = useRouter();
@@ -27,14 +29,7 @@ export default function ProductCreatePage() {
 
   const handleCreateProduct = async (data: Product) => {
     try {
-      const res = await api.post("/products", {
-        name: data.name,
-        price: data.price,
-        categoryId: data.categoryId,
-        maxQuantity: data.maxQuantity,
-        minQuantity: data.minQuantity,
-      });
-      console.log("Product", res.data);
+      await productsService.createProduct(data);
     } catch (error: unknown) {
       console.error("Erro na requisição:", error);
     } finally {
@@ -46,8 +41,8 @@ export default function ProductCreatePage() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const res = await api.get("/categories");
-        setCategories(res.data);
+        const categories = await categoryService.getAllCategories();
+        setCategories(categories);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
       } finally {
@@ -57,6 +52,14 @@ export default function ProductCreatePage() {
 
     fetchCategory();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="p-4 flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">

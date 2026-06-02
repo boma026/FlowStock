@@ -3,8 +3,8 @@
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { categoryService } from "@/services/categoryService";
 import { Category } from "@/types/Category";
-import { api } from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -16,10 +16,8 @@ export default function CategoryCreatePage() {
 
   const handleCreateCategory = async (data: Category) => {
     try {
-      const res = await api.post("/categories", {
-        name: data.name,
-      });
-      console.log("category", res.data);
+      setLoading(true);
+      await categoryService.createCategory(data);
     } catch (error: unknown) {
       console.error("Erro na requisição:", error);
     } finally {
@@ -27,6 +25,14 @@ export default function CategoryCreatePage() {
       router.push("/category");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="p-4 flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">

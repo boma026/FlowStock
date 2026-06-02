@@ -2,8 +2,6 @@
 
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
-import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -12,10 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { movesService } from "@/services/movesService";
 import { Moves } from "@/types/Moves";
-import { Product } from "@/types/Product";
-import { api } from "@/utils/axios";
-import { Delete, SquarePen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -27,9 +23,9 @@ export default function MovesPage() {
   useEffect(() => {
     const fetchMoves = async () => {
       try {
-        const res = await api.get("/moves");
-        setMoves(res.data);
-        console.log(res.data);
+        setLoading(true);
+        const moves = await movesService.getAllMoves();
+        setMoves(moves);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
       } finally {
@@ -43,6 +39,14 @@ export default function MovesPage() {
   const handleChangeToAddMove = () => {
     router.push("/moves/create");
   };
+
+  if (loading) {
+    return (
+      <div className="p-4 flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">
