@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { api } from "@/utils/axios";
+import { privateApi } from "@/utils/axios";
 import { Product } from "@/types/Product";
 import { Moves } from "@/types/Moves";
 import { ChartData } from "@/types/ChartData";
@@ -14,8 +14,8 @@ export function useDashboardData(chartDisplay: string) {
       setLoading(true);
       try {
         const [productsRes, movesRes] = await Promise.all([
-          api.get("/products"),
-          api.get("/moves"),
+          privateApi.get("/products"),
+          privateApi.get("/moves"),
         ]);
         setProducts(productsRes.data);
         setMoves(movesRes.data);

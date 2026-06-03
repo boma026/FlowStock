@@ -4,7 +4,7 @@ import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Product } from "@/types/Product";
-import { api } from "@/utils/axios";
+import { privateApi } from "@/utils/axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -24,8 +24,8 @@ export default function ProductUpdatePage() {
       try {
         setLoading(true);
         const [product, categories] = await Promise.all([
-          api.get(`/products/${id}`),
-          api.get("/categories"),
+          privateApi.get(`/products/${id}`),
+          privateApi.get("/categories"),
         ]);
         console.log("produto", product.data);
         console.log("categories", categories.data);

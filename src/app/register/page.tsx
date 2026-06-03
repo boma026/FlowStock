@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Register } from "@/types/Register";
-import { api } from "@/utils/axios";
+import { publicApi } from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -29,7 +29,7 @@ export default function RegisterPage() {
 
   const handleCreateUser = async (data: Register) => {
     try {
-      const res = await api.post("/users", {
+      const res = await publicApi.post("/users", {
         email: data.email,
         password: data.password,
       });

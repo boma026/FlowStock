@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Login } from "@/types/Login";
-import { api } from "@/utils/axios";
+import { privateApi } from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,7 +27,7 @@ export default function LoginPage() {
 
   const handleGrantAcess = async (data: Login) => {
     try {
-      const res = await api.post("/users/login", {
+      const res = await privateApi.post("/users/login", {
         email: data.email,
         password: data.password,
       });
@@ -37,7 +37,7 @@ export default function LoginPage() {
       console.error("Erro na requisição:", error);
     } finally {
       setLoading(false);
-      //router.push("/");
+      router.push("/dashboard");
     }
   };
 

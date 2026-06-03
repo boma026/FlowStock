@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { movesService } from "@/services/movesService";
 import { Moves } from "@/types/Moves";
 import { Product } from "@/types/Product";
-import { api } from "@/utils/axios";
+import { privateApi } from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -46,7 +46,7 @@ export default function MoveCreatePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await api.get("/products");
+        const res = await privateApi.get("/products");
         setProducts(res.data);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
