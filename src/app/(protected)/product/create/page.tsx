@@ -20,6 +20,7 @@ import {
 import { Category } from "@/types/Category";
 import { productsService } from "@/services/productService";
 import { categoryService } from "@/services/categoryService";
+import { toast } from "sonner";
 
 export default function ProductCreatePage() {
   const router = useRouter();
@@ -28,14 +29,15 @@ export default function ProductCreatePage() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   const handleCreateProduct = async (data: Product) => {
-    try {
-      await productsService.createProduct(data);
-    } catch (error: unknown) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-      router.push("/product");
-    }
+    const createProductPromise = productsService.createProduct(data);
+    toast.promise(createProductPromise, {
+      loading: "Criando produto...",
+      success: () => {
+        router.push("/product");
+        return "Produto criado com sucesso!";
+      },
+      error: "Erro ao criar produto. Verifique os dados",
+    });
   };
 
   useEffect(() => {
@@ -92,7 +94,7 @@ export default function ProductCreatePage() {
                     onValueChange={field.onChange}
                     value={field.value?.toString()}
                   >
-                    <SelectTrigger className="w-1/2" onBlur={field.onBlur}>
+                    <SelectTrigger onBlur={field.onBlur}>
                       <SelectValue placeholder="Selecione uma categoria" />
                     </SelectTrigger>
                     <SelectContent position="popper">

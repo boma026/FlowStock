@@ -18,6 +18,7 @@ import { privateApi } from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function MoveCreatePage() {
   const router = useRouter();
@@ -32,15 +33,15 @@ export default function MoveCreatePage() {
   const [products, setProducts] = useState<Product[]>([]);
 
   const handleCreateMove = async (data: Moves) => {
-    try {
-      setLoading(true);
-      await movesService.createMoves(data);
-    } catch (error: unknown) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-      router.push("/moves");
-    }
+    const createMovePromise = movesService.createMoves(data);
+    toast.promise(createMovePromise, {
+      loading: "Criando movimentação...",
+      success: () => {
+        router.push("/moves");
+        return "Movimentação criada com sucesso!";
+      },
+      error: "Erro ao criar moviemntação. Verifique os dados",
+    });
   };
 
   useEffect(() => {

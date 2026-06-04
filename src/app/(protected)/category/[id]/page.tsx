@@ -8,12 +8,13 @@ import { Category } from "@/types/Category";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function CategoryUpdatePage() {
   const { id } = useParams();
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
-  const { register, handleSubmit } = useForm<Category>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const { register, handleSubmit, reset } = useForm<Category>();
   const [category, setCategory] = useState<Category>();
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export default function CategoryUpdatePage() {
       try {
         setLoading(true);
         const category = await categoryService.getCategoryById(Number(id));
-        console.log("category", category);
+        reset({ name: category.name });
         setCategory(category);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
@@ -34,16 +35,18 @@ export default function CategoryUpdatePage() {
   }, []);
 
   const handleUpdateCategory = async (data: Category) => {
-    try {
-      setLoading(true);
-      const category = await categoryService.updateCategory(Number(id), data);
-      console.log("category", category);
-    } catch (error: unknown) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-      router.push("/category");
-    }
+    const updateCategoryPromise = categoryService.updateCategory(
+      Number(id),
+      data,
+    );
+    toast.promise(updateCategoryPromise, {
+      loading: "Editando categoria...",
+      success: () => {
+        router.push("/category");
+        return "Categoria editada com sucesso!";
+      },
+      error: "Nome já existente.",
+    });
   };
 
   if (loading) {

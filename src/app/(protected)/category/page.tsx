@@ -27,12 +27,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { categoryService } from "@/services/categoryService";
+import { toast } from "sonner";
 
 export default function CategoryPage() {
   const router = useRouter();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleChangeToAddCategory = () => {
     router.push("/category/create");
@@ -43,16 +45,15 @@ export default function CategoryPage() {
   };
 
   const handleDeleteCategory = async (id: number) => {
-    try {
-      setLoading(true);
-      await categoryService.deleteCategory(id);
-      const categories = await categoryService.getAllCategories();
-      setCategories(categories);
-    } catch (error: unknown) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-    }
+    const deleteCategoryPromise = categoryService.deleteCategory(Number(id));
+    toast.promise(deleteCategoryPromise, {
+      loading: "Deletando categoria...",
+      success: () => {
+        setRefreshKey((prev) => prev + 1);
+        return "Categoria excluída com sucesso!";
+      },
+      error: "Erro ao realizar exclusão. Tente novamente mais tarde",
+    });
   };
 
   useEffect(() => {
@@ -68,7 +69,7 @@ export default function CategoryPage() {
       }
     };
     fetchCategory();
-  }, []);
+  }, [refreshKey]);
 
   if (loading) {
     return (

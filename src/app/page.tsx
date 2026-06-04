@@ -10,44 +10,32 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { userService } from "@/services/userService";
 import { Login } from "@/types/Login";
-import { privateApi } from "@/utils/axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function LoginPage() {
-  const { register, handleSubmit, watch } = useForm<Login>();
+  const { register, handleSubmit } = useForm<Login>();
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChangeToRegister = () => {
     router.push("/register");
   };
 
   const handleGrantAcess = async (data: Login) => {
-    try {
-      const res = await privateApi.post("/users/login", {
-        email: data.email,
-        password: data.password,
-      });
+    const verifyLoginPromise = userService.verfyLogin(data);
 
-      console.log("token", res.data);
-    } catch (error: unknown) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-      router.push("/dashboard");
-    }
+    toast.promise(verifyLoginPromise, {
+      loading: "Verificando credenciais...",
+      success: () => {
+        router.push("/dashboard");
+        return "Login efetuado com sucesso!";
+      },
+      error: "Erro ao realizar login. Verifique os dados.",
+    });
   };
-
-  if (loading) {
-    return (
-      <div className="p-4 flex items-center justify-center min-h-screen">
-        Carregando...
-      </div>
-    );
-  }
 
   return (
     <div className=" relative w-full min-h-screen flex justify-center items-center">

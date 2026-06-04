@@ -3,6 +3,8 @@ import { privateApi } from "@/utils/axios";
 import { Product } from "@/types/Product";
 import { Moves } from "@/types/Moves";
 import { ChartData } from "@/types/ChartData";
+import { productsService } from "@/services/productService";
+import { movesService } from "@/services/movesService";
 
 export function useDashboardData(chartDisplay: string) {
   const [products, setProducts] = useState<Product[]>([]);
@@ -14,11 +16,11 @@ export function useDashboardData(chartDisplay: string) {
       setLoading(true);
       try {
         const [productsRes, movesRes] = await Promise.all([
-          privateApi.get("/products"),
-          privateApi.get("/moves"),
+          productsService.getAllProducts(),
+          movesService.getAllMoves(),
         ]);
-        setProducts(productsRes.data);
-        setMoves(movesRes.data);
+        setProducts(productsRes);
+        setMoves(movesRes);
       } catch (error) {
         console.error("Erro na requisição:", error);
       } finally {

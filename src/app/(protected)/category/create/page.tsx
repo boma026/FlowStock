@@ -6,33 +6,24 @@ import { Input } from "@/components/ui/input";
 import { categoryService } from "@/services/categoryService";
 import { Category } from "@/types/Category";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function CategoryCreatePage() {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
   const { register, handleSubmit } = useForm<Category>();
 
   const handleCreateCategory = async (data: Category) => {
-    try {
-      setLoading(true);
-      await categoryService.createCategory(data);
-    } catch (error: unknown) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-      router.push("/category");
-    }
+    const createCategoryPromise = categoryService.createCategory(data);
+    toast.promise(createCategoryPromise, {
+      loading: "Criando categoria...",
+      success: () => {
+        router.push("/category");
+        return "Categoria criado com sucesso!";
+      },
+      error: "Nome já existente.",
+    });
   };
-
-  if (loading) {
-    return (
-      <div className="p-4 flex items-center justify-center min-h-screen">
-        Carregando...
-      </div>
-    );
-  }
 
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">

@@ -29,12 +29,14 @@ import { Delete, SquarePen, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { productsService } from "@/services/productService";
+import { toast } from "sonner";
 
 export default function ProductPage() {
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
   const [products, setProducts] = useState<Product[]>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const filteredProducts = products?.filter((product) =>
     product.name.toLowerCase().includes(search.toLowerCase()),
@@ -54,7 +56,7 @@ export default function ProductPage() {
     };
 
     fetchProduct();
-  }, []);
+  }, [refreshKey]);
 
   const handleChangeToAddProduct = () => {
     router.push("/product/create");
@@ -65,16 +67,15 @@ export default function ProductPage() {
   };
 
   const handleDeleteProduct = async (id: number) => {
-    try {
-      setLoading(true);
-      await productsService.deleteProduct(id);
-      const products = await productsService.getAllProducts();
-      setProducts(products);
-    } catch (error: unknown) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-    }
+    const deleteProductPromise = productsService.deleteProduct(Number(id));
+    toast.promise(deleteProductPromise, {
+      loading: "deletando produto...",
+      success: () => {
+        setRefreshKey((prev) => prev + 1);
+        return "Produto excluído com sucesso!";
+      },
+      error: "Erro ao editar produto. Verifique os dados",
+    });
   };
 
   if (loading) {

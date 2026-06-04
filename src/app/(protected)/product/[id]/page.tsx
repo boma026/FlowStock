@@ -7,15 +7,25 @@ import { Product } from "@/types/Product";
 import { privateApi } from "@/utils/axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Category } from "@/types/Category";
 import { productsService } from "@/services/productService";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { categoryService } from "@/services/categoryService";
+import { toast } from "sonner";
 
 export default function ProductUpdatePage() {
   const { id } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const { register, handleSubmit } = useForm<Product>();
+  const { register, handleSubmit, control, reset } = useForm<Product>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [product, setProduct] = useState<Product>();
 
@@ -24,13 +34,17 @@ export default function ProductUpdatePage() {
       try {
         setLoading(true);
         const [product, categories] = await Promise.all([
-          privateApi.get(`/products/${id}`),
-          privateApi.get("/categories"),
+          productsService.getProductById(Number(id)),
+          categoryService.getAllCategories(),
         ]);
-        console.log("produto", product.data);
-        console.log("categories", categories.data);
-        setProduct(product.data);
-        setCategories(categories.data);
+
+        const fetchedProduct = product;
+        setProduct(product);
+        setCategories(categories);
+        reset({
+          ...fetchedProduct,
+          categoryId: fetchedProduct.categoryId,
+        });
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
       } finally {
@@ -52,16 +66,19 @@ export default function ProductUpdatePage() {
         return [key, newValue];
       }),
     ) as Partial<Product>;
-    console.log(updatedData);
-    try {
-      setLoading(true);
-      await productsService.updateProduct(Number(id), data);
-    } catch (error: unknown) {
-      console.error("Erro na requisição:", error);
-    } finally {
-      setLoading(false);
-      router.push("/product");
-    }
+
+    const updateProductPromise = productsService.updateProduct(
+      Number(id),
+      updatedData,
+    );
+    toast.promise(updateProductPromise, {
+      loading: "Editando produto...",
+      success: () => {
+        router.push("/product");
+        return "Produto editado com sucesso!";
+      },
+      error: "Erro ao editar produto. Verifique os dados",
+    });
   };
 
   if (loading) {
@@ -75,7 +92,7 @@ export default function ProductUpdatePage() {
   return (
     <div className="p-4 flex flex-col w-full min-h-screen gap-2">
       <header className="flex justify-between ">
-        <p className="title">Novo produto</p>
+        <p className="title">Editar produto</p>
       </header>
       <hr />
       <form onSubmit={handleSubmit(handleUpdateProduct)}>
@@ -96,17 +113,32 @@ export default function ProductUpdatePage() {
               <label htmlFor="produto" className="font-extrabold">
                 Categoria
               </label>
-              <select
-                defaultValue={product?.categoryId}
-                className="border-2 rounded-md p-1"
-                {...register("categoryId")}
-              >
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                control={control}
+                name="categoryId"
+                render={({ field }) => (
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value?.toString()}
+                  >
+                    <SelectTrigger onBlur={field.onBlur}>
+                      <SelectValue placeholder="Selecione uma categoria" />
+                    </SelectTrigger>
+                    <SelectContent position="popper">
+                      <SelectGroup>
+                        {categories.map((category) => (
+                          <SelectItem
+                            key={category.id}
+                            value={category.id.toString()}
+                          >
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
             <div className="flex flex-col flex:1 w-full">
               <label htmlFor="name" className="font-extrabold">

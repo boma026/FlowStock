@@ -24,7 +24,10 @@ export const productsService = {
     return res.data;
   },
 
-  updateProduct: async (id: number, product: Product): Promise<Product> => {
+  updateProduct: async (
+    id: number,
+    product: Partial<Product>,
+  ): Promise<Product> => {
     const res = await privateApi.put(`/products/${id}`, {
       name: product.name,
       price: product.price,
