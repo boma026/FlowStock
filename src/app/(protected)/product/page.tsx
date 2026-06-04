@@ -28,8 +28,7 @@ import { ColumnDef, DataTable } from "@/components/dataTable";
 import { CrudLayout } from "@/components/CrudLayout";
 
 const productColumns: ColumnDef[] = [
-  { label: "Nome", className: "w-1/5" }, // Corrigido de 1/5 para w-1/5 para manter padrão do Tailwind
-  { label: "Categoria", className: "w-1/5" },
+  { label: "Nome", className: "w-1/5" },
   { label: "Preço Unit.", className: "w-1/5" },
   { label: "Qt. em Estoque", className: "w-1/5" },
   { label: "Ações", className: "w-1/5 text-center" },

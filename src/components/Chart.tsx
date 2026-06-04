@@ -16,7 +16,7 @@ type ChartProps = {
   chartData: ChartData[];
 };
 
-export function Chart({ chartData, chartDisplay }: ChartProps) {
+export function Chart({ chartData }: ChartProps) {
   const chartConfig = {
     price: {
       label: "Moves (R$)",
@@ -26,11 +26,10 @@ export function Chart({ chartData, chartDisplay }: ChartProps) {
 
   return (
     <ChartContainer config={chartConfig} className="min-h-50 w-full">
-      {/* Passamos o 'chartData' agregado para o BarChart */}
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={true} />
         <XAxis
-          dataKey="date" // Mudamos para "date" para bater com o formato "DD/MM" que criamos
+          dataKey="date"
           tickLine={false}
           tickMargin={20}
           axisLine={false}
