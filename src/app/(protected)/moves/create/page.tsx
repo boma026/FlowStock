@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import { movesService } from "@/services/movesService";
+import { productsService } from "@/services/productService";
 import { Moves } from "@/types/Moves";
 import { Product } from "@/types/Product";
 import { privateApi } from "@/utils/axios";
@@ -47,8 +48,8 @@ export default function MoveCreatePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await privateApi.get("/products");
-        setProducts(res.data);
+        const products = await productsService.getAllProducts();
+        setProducts(products);
       } catch (error: unknown) {
         console.error("Erro na requisição:", error);
       } finally {

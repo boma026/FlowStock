@@ -1,4 +1,3 @@
-import { Category } from "@/types/Category";
 import { Product } from "@/types/Product";
 import { privateApi } from "@/utils/axios";
 

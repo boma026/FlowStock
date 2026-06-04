@@ -1,17 +1,9 @@
 "use client";
 
-import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { TableCell, TableRow } from "@/components/ui/table";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,6 +22,18 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { productsService } from "@/services/productService";
 import { toast } from "sonner";
+
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { ColumnDef, DataTable } from "@/components/dataTable";
+import { CrudLayout } from "@/components/CrudLayout";
+
+const productColumns: ColumnDef[] = [
+  { label: "Nome", className: "w-1/5" }, // Corrigido de 1/5 para w-1/5 para manter padrão do Tailwind
+  { label: "Categoria", className: "w-1/5" },
+  { label: "Preço Unit.", className: "w-1/5" },
+  { label: "Qt. em Estoque", className: "w-1/5" },
+  { label: "Ações", className: "w-1/5 text-center" },
+];
 
 export default function ProductPage() {
   const router = useRouter();
@@ -78,24 +82,18 @@ export default function ProductPage() {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="p-4 flex items-center justify-center min-h-screen">
-        Carregando...
-      </div>
-    );
-  }
+  if (loading) return <LoadingScreen />;
 
   return (
-    <div className="p-4 flex flex-col w-full min-h-screen gap-2">
-      <header className="flex justify-between ">
-        <p className="title">Produtos</p>
-        <Button size="lg" onClick={handleChangeToAddProduct}>
-          Novo Produto
-        </Button>
-      </header>
-      <hr />
-      <Field orientation="horizontal" className="border-2 p-4 w-1/2 rounded-xl">
+    <CrudLayout
+      title="Produtos"
+      actionText="Novo Produto"
+      onActionClick={handleChangeToAddProduct}
+    >
+      <Field
+        orientation="horizontal"
+        className="border-2 p-4 w-1/2 rounded-xl mb-4"
+      >
         <Input
           type="search"
           placeholder="Pesquise um produto."
@@ -104,67 +102,54 @@ export default function ProductPage() {
         />
         <Button>Buscar</Button>
       </Field>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="1/5">Nome</TableHead>
-            <TableHead className="w-1/5">Categoria</TableHead>
-            <TableHead className="w-1/5 ">Preço Unit.</TableHead>
-            <TableHead className="w-1/5 ">Qt. em Estoque</TableHead>
-            <TableHead className="w-1/5 text-center">Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredProducts?.map((product) => (
-            <TableRow key={product.id}>
-              <TableCell className="font-medium">{product.name}</TableCell>
-              <TableCell>{product.category.name}</TableCell>
-              <TableCell>{product.price}</TableCell>
-              <TableCell>{product.quantity}</TableCell>
-              <TableCell className="flex justify-center items-center gap-2">
-                <Button onClick={() => handleUpdateProduct(product.id)}>
-                  <SquarePen />
-                </Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
+
+      <DataTable columns={productColumns}>
+        {filteredProducts?.map((product) => (
+          <TableRow key={product.id}>
+            <TableCell className="font-medium">{product.name}</TableCell>
+            <TableCell>{product.category.name}</TableCell>
+            <TableCell>R$ {product.price}</TableCell>
+            <TableCell>{product.quantity}</TableCell>
+            <TableCell className="flex justify-center items-center gap-2">
+              <Button onClick={() => handleUpdateProduct(product.id)}>
+                <SquarePen />
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    disabled={product.moves.length >= 1}
+                  >
+                    <Delete />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent size="sm">
+                  <AlertDialogHeader>
+                    <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                      <Trash2Icon />
+                    </AlertDialogMedia>
+                    <AlertDialogTitle>Deletar produto?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Tem certeza? Isto irá deletar o produto permanentemente.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel variant="outline">
+                      Cancelar
+                    </AlertDialogCancel>
+                    <AlertDialogAction
                       variant="destructive"
-                      disabled={product.moves.length >= 1 ? true : false}
+                      onClick={() => handleDeleteProduct(product.id)}
                     >
-                      <Delete />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent size="sm">
-                    <AlertDialogHeader>
-                      <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-                        <Trash2Icon />
-                      </AlertDialogMedia>
-                      <AlertDialogTitle>Deletar produto?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Tem certeza? Isto irá deletar a produto pemanentemente.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel variant="outline">
-                        Cancel
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        variant="destructive"
-                        onClick={() => handleDeleteProduct(product.id)}
-                      >
-                        Delete
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <div className="fixed bottom-4 right-4">
-        <ModeToggle />
-      </div>
-    </div>
+                      Deletar
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </TableCell>
+          </TableRow>
+        ))}
+      </DataTable>
+    </CrudLayout>
   );
 }

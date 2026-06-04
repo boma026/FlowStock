@@ -28,6 +28,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { categoryService } from "@/services/categoryService";
 import { toast } from "sonner";
+import { CrudLayout } from "@/components/CrudLayout";
+import { ColumnDef, DataTable } from "@/components/dataTable";
+
+const categoryColumns: ColumnDef[] = [
+  { label: "Nome", className: "w-1/3" },
+  { label: "Quantidade", className: "w-1/3" },
+  { label: "Ações", className: "w-1/3 text-center" },
+];
 
 export default function CategoryPage() {
   const router = useRouter();
@@ -80,75 +88,59 @@ export default function CategoryPage() {
   }
 
   return (
-    <div className="p-4 flex flex-col w-full min-h-screen gap-2">
-      <header className="flex justify-between ">
-        <p className="title">Categorias</p>
-        <Button size="lg" onClick={handleChangeToAddCategory}>
-          Nova categoria
-        </Button>
-      </header>
-      <hr />
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-1/3">Nome</TableHead>
-            <TableHead className="w-1/3">Quantidade</TableHead>
-            <TableHead className="w-1/3 text-center">Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {categories.map((category) => (
-            <TableRow key={category.id}>
-              <TableCell className="font-medium">{category.name}</TableCell>
-              <TableCell>
-                {category.products.length}{" "}
-                {category.products.length >= 2 ? "produtos" : "produto"}
-              </TableCell>
-              <TableCell className="flex justify-center items-center gap-2">
-                <Button onClick={() => handleUpdateCategory(category.id)}>
-                  <SquarePen />
-                </Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
+    <CrudLayout
+      title="Categorias"
+      onActionClick={handleChangeToAddCategory}
+      actionText="Nova categoria"
+    >
+      <DataTable columns={categoryColumns}>
+        {categories.map((category) => (
+          <TableRow key={category.id}>
+            <TableCell className="font-medium">{category.name}</TableCell>
+            <TableCell>
+              {category.products.length}{" "}
+              {category.products.length >= 2 ? "produtos" : "produto"}
+            </TableCell>
+            <TableCell className="flex justify-center items-center gap-2">
+              <Button onClick={() => handleUpdateCategory(category.id)}>
+                <SquarePen />
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    disabled={category.products.length >= 1}
+                  >
+                    <Delete />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent size="sm">
+                  <AlertDialogHeader>
+                    <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                      <Trash2Icon />
+                    </AlertDialogMedia>
+                    <AlertDialogTitle>Deletar categoria?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Tem certeza? Isto irá deletar a categoria permanentemente.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel variant="outline">
+                      Cancelar
+                    </AlertDialogCancel>
+                    <AlertDialogAction
                       variant="destructive"
-                      disabled={category.products.length >= 1 ? true : false}
+                      onClick={() => handleDeleteCategory(category.id)}
                     >
-                      <Delete />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent size="sm">
-                    <AlertDialogHeader>
-                      <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-                        <Trash2Icon />
-                      </AlertDialogMedia>
-                      <AlertDialogTitle>Deletar categoria?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Tem certeza? Isto irá deletar a categoria
-                        pemanentemente.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel variant="outline">
-                        Cancel
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        variant="destructive"
-                        onClick={() => handleDeleteCategory(category.id)}
-                      >
-                        Delete
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <div className="fixed bottom-4 right-4">
-        <ModeToggle />
-      </div>
-    </div>
+                      Deletar
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </TableCell>
+          </TableRow>
+        ))}
+      </DataTable>
+    </CrudLayout>
   );
 }
