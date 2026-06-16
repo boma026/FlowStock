@@ -1,15 +1,7 @@
 "use client";
 
-import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { Category } from "@/types/Category";
 import { Delete, SquarePen, Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";

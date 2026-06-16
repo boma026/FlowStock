@@ -3,7 +3,6 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
@@ -11,13 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  Container,
-  LayoutDashboard,
-  LayoutList,
-  Search,
-  User,
-} from "lucide-react";
+import { Container, LayoutDashboard, LayoutList, Search } from "lucide-react";
 import Link from "next/link";
 
 export function AppSidebar() {

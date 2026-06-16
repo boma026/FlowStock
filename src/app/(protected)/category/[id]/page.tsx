@@ -32,7 +32,7 @@ export default function CategoryUpdatePage() {
     };
 
     fetchCategory();
-  }, []);
+  }, [id, reset]);
 
   const handleUpdateCategory = async (data: Category) => {
     const updateCategoryPromise = categoryService.updateCategory(

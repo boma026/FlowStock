@@ -4,7 +4,6 @@ import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Product } from "@/types/Product";
-import { privateApi } from "@/utils/axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -53,7 +52,7 @@ export default function ProductUpdatePage() {
     };
 
     fetchProductCategories();
-  }, []);
+  }, [id, reset]);
 
   const handleUpdateProduct = async (data: Product) => {
     const updatedData = Object.fromEntries(

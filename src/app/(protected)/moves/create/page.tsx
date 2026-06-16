@@ -15,7 +15,6 @@ import { movesService } from "@/services/movesService";
 import { productsService } from "@/services/productService";
 import { Moves } from "@/types/Moves";
 import { Product } from "@/types/Product";
-import { privateApi } from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";

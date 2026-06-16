@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { privateApi } from "@/utils/axios";
 import { Product } from "@/types/Product";
 import { Moves } from "@/types/Moves";
 import { ChartData } from "@/types/ChartData";
@@ -125,7 +124,7 @@ export function useDashboardData(chartDisplay: string) {
     });
 
     return products.filter((product) => !recentlyMovedIds.has(product.id));
-  }, [products, moves, chartDisplay]);
+  }, [products, moves, cutoffDate]);
 
   const lowStockProducts = useMemo(() => {
     return products.filter(
